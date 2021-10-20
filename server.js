@@ -93,8 +93,8 @@ function viewRoles(){
 };
 
 function viewEmployees(){
-    const sql = "SELECT * FROM employee";
-    db.query(sql, function(err, res){
+    const sql = `SELECT * FROM employee`;
+    db.query(sql, (err, res) => {
         console.log(`Employees: `);
         res.forEach(employee => { 
             console.log(`ID: ${employee.id} | Name: ${employee.first_name} ${employee.last_name} | Role ID: ${employee.role_id} | Manager ID: ${employee.manager_id}`);
@@ -102,3 +102,64 @@ function viewEmployees(){
         start();
     });
  };
+
+ function addDepartment() {
+     inquirer.prompt({
+         type: 'input',
+         name: 'department',
+         message: "What id the name of the new Department?",
+     })
+     .then(function(answer){
+         const sql = `INSERT INTO department.name VALUES = ?`;
+         db.query(sql, answer.department, (err, res) =>{
+console.log(`You have added this department : ${(answer.department).toUpperCase()}`);
+
+         })
+         viewDepartments();
+     })
+ }
+
+ function addRole(){
+     
+     db.query(`SELECT * FROM department`, (err, res) => {
+         if(err) throw err;
+         inquirer.prompt([
+             {
+                 type: 'input',
+                 name: 'title',
+                 message: "What is the Title of the new Role?"
+             }, {
+                 type: 'input',
+                 name: 'salary',
+                 message: "What is the Salary of the new Role?"
+             }, {
+                 type: 'list',
+                 name: 'departmentName',
+                 message: "Which department belongs to this Role?",
+                 choices: function(){
+                     const choiceArray = [];
+                     res.forEach(res => {
+                         choiceArray.push(res.name);
+                     })
+                     return choiceArray;
+                 }
+             }
+         ])
+         .then((answer) =>{
+             const department = answer.departmentName;
+             db.query(`SELECT * FROM DEPARTMENT`, (err, res) => {
+                if(err) throw err;
+                let filteredDept = res.filter((res) => {
+                    return res.name == department;
+                })
+                let id = filteredDept[0].id;
+                let sql = `INSERT INTO role (title)`
+             })
+         })
+         res.forEach(role => {
+             console.log(`ID: ${role.id} | Title: ${role.title} | Salary: ${role.salary} | Department ID: ${role.department_id}`);
+
+         })
+         start();
+     });
+ }
