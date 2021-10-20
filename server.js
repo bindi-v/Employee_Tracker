@@ -1,4 +1,5 @@
 const express = require('express');
+const { restoreDefaultPrompts } = require('inquirer');
 const inquirer = require('inquirer');
 // Import and require mysql2
 const mysql = require('mysql2');
@@ -18,7 +19,7 @@ const db = mysql.createConnection(
     // MySQL username,
     user: 'root',
     // Add MySQL password here
-    password: '',
+    password: 'Jashu&Champa@2784',
     database: 'employees_db'
   },
   console.log(`Connected to the employees_db database.`)
@@ -158,9 +159,82 @@ function viewEmployees(){
                 db.query(sql, values, (err, res, fields) => {
                     console.log(`You have added this role: ${(values[0]).toUpperCase()}`)
                 })
-                viewRoles()
+                viewRoles();
              })
          })
 
          })
+ }
+
+ async function addEmployee() {
+     db.query("SELECT * FROM role", (err, res) => {
+        if(err) throw err;
+        inquirer.prompt([
+            {
+                type: 'input',
+                name: 'firstName',
+                message: "What is the Employee's first name?"
+            }, {
+                type: 'input',
+                name: 'lastName',
+                message: "What is the Employee's last name?"
+            }, {
+                type: 'list',
+                name: 'roleName',
+                message: "What is an Employee's role? ",
+                choices: function() {
+                    rolesArray = [];
+                    res.forEach(res => {
+                        rolesArray.push(res.title);
+                    })
+                    return rolesArray;
+                }
+            }
+        ])
+        .then((answer) => {
+            console.log(answer);
+            const role = answer.roleName;
+            db.query("SELECT * FROM role", (err, res) => {
+                if(err) throw err;
+                let filteredRole = res.filter((res) => {
+                    return res.title == role;
+                })
+                let roleId = filteredRole[0].id;
+                db.query("SELECT * FROM employee", (err, res) => {
+                    inquirer.prompt([
+                        {
+                            type: 'list',
+                            name: 'manager',
+                            message: "Who is the Manager?",
+                            choices: function(){
+                                managersArray = [];
+                                res.forEach(res => {
+                                    managersArray.push(res.last_name)
+                                })
+                                return managersArray;
+                            }
+                        }
+                    ])
+                    .then((managerAns) => {
+                        const manager = managerAns.manager;
+                        db.query("SELECT * FROM employee", (err, res) => {
+                            if(err) throw err;
+                            let filteredManager = res.filter((res) => {
+                                return res.last_name == manager;
+                            }) 
+                            let managerId = filteredManager[0].id;
+                            console.log(managerAns);
+                            const sql = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?)";
+                            const values = [answer.firstName, answer.lastName, roleId, managerId];
+                            console.log(values);
+                            db.query(sql, values, (err, res, fields) => {
+                                console.log(`You have added an Employee: ${values[0].toUpperCase()}`);
+                            })
+                            viewEmployees();
+                        })
+                    })
+                })
+            })
+        })
+     })
  }
