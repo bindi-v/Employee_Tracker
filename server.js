@@ -24,13 +24,13 @@ const db = mysql.createConnection(
   console.log(`Connected to the employees_db database.`)
 );
 
-db.connect(function(err){
+db.connect((err) => {
     if(err) throw err;
-    start()
+    start();
 });
 
 function start(){
-    inquirer.prompt([
+    inquirer.prompt(
         {
        type: 'list',
        name: 'action',
@@ -45,9 +45,8 @@ function start(){
            "Update an Employee's Role",
            'Exit'
        ]
-    }
-])
-.then(function(answer){
+    })
+.then((answer) => {
     if(answer.action === 'View all Departments'){
         viewDepartments();
     }else if(answer.action === 'View all Roles'){
@@ -71,8 +70,8 @@ function start(){
 
 function viewDepartments() {
     const sql = "SELECT * FROM department";
-    db.query(sql, function(err, res){
-        console.log('DEPARTMENTS:');
+    db.query(sql, (err, res) => {
+        console.log(`DEPARTMENTS: `);
         res.forEach(department => {
             console.log(`ID: ${department.id} | Name: ${department.name}`)
         })
@@ -82,7 +81,7 @@ function viewDepartments() {
 
 function viewRoles(){
     const sql = "SELECT * FROM role";
-    db.query(sql, function(err, res){
+    db.query(sql, (err, res) => {
         console.log(`ROLES: `);
         res.forEach(role => {
             console.log(`ID: ${role.id} | Title: ${role.title} | Salary: ${role.salary} | Department ID: ${role.department_id}`);
@@ -93,7 +92,7 @@ function viewRoles(){
 };
 
 function viewEmployees(){
-    const sql = `SELECT * FROM employee`;
+    const sql = "SELECT * FROM employee";
     db.query(sql, (err, res) => {
         console.log(`Employees: `);
         res.forEach(employee => { 
@@ -109,10 +108,10 @@ function viewEmployees(){
          name: 'department',
          message: "What id the name of the new Department?",
      })
-     .then(function(answer){
-         const sql = `INSERT INTO department.name VALUES = ?`;
+     .then((answer) => {
+         const sql = "INSERT INTO department.name VALUES = ?";
          db.query(sql, answer.department, (err, res) =>{
-console.log(`You have added this department : ${(answer.department).toUpperCase()}`);
+         console.log(`You have added this department : ${(answer.department).toUpperCase()}`);
 
          })
          viewDepartments();
@@ -121,7 +120,7 @@ console.log(`You have added this department : ${(answer.department).toUpperCase(
 
  function addRole(){
      
-     db.query(`SELECT * FROM department`, (err, res) => {
+     db.query("SELECT * FROM department", (err, res) => {
          if(err) throw err;
          inquirer.prompt([
              {
@@ -153,13 +152,15 @@ console.log(`You have added this department : ${(answer.department).toUpperCase(
                     return res.name == department;
                 })
                 let id = filteredDept[0].id;
-                let sql = `INSERT INTO role (title)`
+                let sql = "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)";
+                let values = [answer.title, parseInt(answer.salary), id]
+                console.log(values);
+                db.query(sql, values, (err, res, fields) => {
+                    console.log(`You have added this role: ${(values[0]).toUpperCase()}`)
+                })
+                viewRoles()
              })
          })
-         res.forEach(role => {
-             console.log(`ID: ${role.id} | Title: ${role.title} | Salary: ${role.salary} | Department ID: ${role.department_id}`);
 
          })
-         start();
-     });
  }
