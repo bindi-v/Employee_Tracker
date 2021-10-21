@@ -36,6 +36,12 @@ WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
 ```
 
+## Mock Up
+
+* Design the database schema as shown in the following image:
+  ![Database Schema](./Assets/tables.png)
+
+* ![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./Assets/vdo.png)
 ## Table Of Contents
 
 - [Installation](#installation)
