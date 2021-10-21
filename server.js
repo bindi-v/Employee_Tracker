@@ -3,7 +3,6 @@ const express = require('express');
 const inquirer = require('inquirer');
 // Import and require mysql2
 const mysql = require('mysql2');
-//const { start } = require('repl');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -16,8 +15,10 @@ app.use(express.json());
 const db = mysql.createConnection(
   {
     host: 'localhost',
+    
     // MySQL username,
     user: 'root',
+
     // Add MySQL password here
     password: 'Jashu&Champa@2784',
 
