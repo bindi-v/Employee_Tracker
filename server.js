@@ -3,6 +3,8 @@ const express = require('express');
 const inquirer = require('inquirer');
 // Import and require mysql2
 const mysql = require('mysql2');
+const cTable = require('console.table');
+
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -74,9 +76,9 @@ function start(){
 function viewDepartments() {
     const sql = "SELECT * FROM department";
     db.query(sql, (err, res) => {
-        console.log(`DEPARTMENTS: `);
+        console.log(`Departments: `);
         res.forEach(department => {
-            console.log(`ID: ${department.id} | Name: ${department.name}`)
+            console.log(`Id: ${department.id} | Name: ${department.name}`)
         })
         start();
     });
@@ -85,9 +87,9 @@ function viewDepartments() {
 function viewRoles(){
     const sql = "SELECT * FROM role";
     db.query(sql, (err, res) => {
-        console.log(`ROLES: `);
+        console.log(`Roles: `);
         res.forEach(role => {
-            console.log(`ID: ${role.id} | Title: ${role.title} | Salary: ${role.salary} | Department ID: ${role.department_id}`);
+            console.log(`Id: ${role.id} | Title: ${role.title} | Salary: ${role.salary} | Department Id: ${role.department_id}`);
         })
         start();
     });
@@ -99,7 +101,7 @@ function viewEmployees(){
     db.query(sql, (err, res) => {
         console.log(`Employees: `);
         res.forEach(employee => { 
-            console.log(`ID: ${employee.id} | Name: ${employee.first_name} ${employee.last_name} | Role ID: ${employee.role_id} | Manager ID: ${employee.manager_id}`);
+            console.log(`Id: ${employee.id} | Name: ${employee.first_name} ${employee.last_name} | Role Id: ${employee.role_id} | Manager ID: ${employee.manager_id}`);
         })
         start();
     });

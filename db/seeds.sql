@@ -22,4 +22,4 @@ VALUES ("Mike", "Chan", 3),
        ("Malia", "Brown", 1),
        ("Sarah", "Lourd", 4),
        ("Tom", "Allen", 4),
-       ("John", "Doe", 3);
+       ("John", "Doe", 5);
