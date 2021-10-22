@@ -42,6 +42,7 @@ THEN I am prompted to select an employee to update and their new role and this i
   ![Database Schema](./Assets/tables.png)
 
 * ![A video thumbnail shows the command-line employee management application with a play button overlaying the view.](./Assets/vdo.png)
+
 ## Table Of Contents
 
 - [Installation](#installation)
@@ -53,7 +54,8 @@ THEN I am prompted to select an employee to update and their new role and this i
 ## Installation 
 
 The following necessary dependencies must be installed to run the application.
-   Node.js, Inquirer and MYSQL.
+
+   Node.js, Inquirer, MYSQL2 and console.table
 
 ## Usage
 

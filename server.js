@@ -1,4 +1,4 @@
-const express = require('express');
+//const express = require('express');
 
 const inquirer = require('inquirer');
 // Import and require mysql2
@@ -6,12 +6,12 @@ const mysql = require('mysql2');
 const cTable = require('console.table');
 
 
-const PORT = process.env.PORT || 3001;
-const app = express();
+//const PORT = process.env.PORT || 3001;
+//const app = express();
 
 // Express middleware
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+//app.use(express.urlencoded({ extended: false }));
+//app.use(express.json());
 
 // Connect to database
 const db = mysql.createConnection(
@@ -24,7 +24,8 @@ const db = mysql.createConnection(
     // Add MySQL password here
     password: 'Jashu&Champa@2784',
 
-    database: 'employees_db'
+    database: 'employees_db',
+    port: 3306
   },
   console.log(`Connected to the employees_db database.`)
 );
@@ -68,41 +69,52 @@ function start(){
     }else if(answer.action === "Update an Employee's Role"){
         updateRole();
     }else if(answer.action === 'Exit'){
-        db.end();
+         return db.end();
     }
 })
-}
+};
 
 function viewDepartments() {
-    const sql = "SELECT * FROM department";
+    const sql = "SELECT id AS Id, name AS Department FROM department";
     db.query(sql, (err, res) => {
-        console.log(`Departments: `);
-        res.forEach(department => {
-            console.log(`Id: ${department.id} | Name: ${department.name}`);
-        })
+        if(err) throw err;
+       // console.log(`Departments: `);
+       // res.forEach(department => {
+        //    console.log(`Id: ${department.id} | Name: ${department.name}`);
+        console.table(res);
         start();
-    });
+        })
+    //});
 };
 
 function viewRoles(){
-    const sql = "SELECT * FROM role";
+    const sql = "SELECT role.id AS Id, role.title AS Title, role.salary AS Salary, role.department_id AS Department FROM role";
+    //"SELECT * FROM role";
+
     db.query(sql, (err, res) => {
-        console.log(`Roles: `);
-        res.forEach(role => {
-        console.log(`Id: ${role.id}  | Title: ${role.title}`);
-        })
+        if(err) throw err;
+        //console.log(`Roles: `);
+       // console.table(`Roles:`);
+      // res.forEach(role => {
+       // console.log(`Id: ${role.id}  | Title: ${role.title} | Salary: ${role.salary} | Department: ${role.department_id}`);
+        
+       // })
+        console.table(res);
         start();
     });
 
 };
 
 function viewEmployees(){
-    const sql = "SELECT * FROM employee";
+    const sql = 
+    //"SELECT employee.id AS Id, employee.first_name As FirstName, employee.last_name AS LastName, role.title AS Title, role.salary AS Salary, department.name AS Department";
     db.query(sql, (err, res) => {
+        if(err) throw err;
         console.log(`Employees: `);
         res.forEach(employee => { 
-            console.log(`Id: ${employee.id}  | Name: ${employee.first_name} ${employee.last_name}`);
-        })
+       console.log(`Id: ${employee.id}  | Name: ${employee.first_name} ${employee.last_name}`);
+       })
+       console.table(res);
         start();
     });
  };
@@ -116,10 +128,11 @@ function viewEmployees(){
      .then((answer) => {
          const sql = "INSERT INTO department.name VALUES = ?";
          db.query(sql, answer.department, (err, res) =>{
+            if(err) throw err;
          console.log(`You have added this department : ${(answer.department)}`);
-
+            console.table(res);
+         start();
          })
-         viewDepartments();
      })
  }
 
