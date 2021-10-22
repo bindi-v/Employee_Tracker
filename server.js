@@ -78,7 +78,7 @@ function viewDepartments() {
     db.query(sql, (err, res) => {
         console.log(`Departments: `);
         res.forEach(department => {
-            console.log(`Id: ${department.id} | Name: ${department.name}`)
+            console.log(`Id: ${department.id} | Name: ${department.name}`);
         })
         start();
     });
@@ -89,7 +89,7 @@ function viewRoles(){
     db.query(sql, (err, res) => {
         console.log(`Roles: `);
         res.forEach(role => {
-            console.log(`Id: ${role.id} | Title: ${role.title} | Salary: ${role.salary} | Department Id: ${role.department_id}`);
+        console.log(`Id: ${role.id}  | Title: ${role.title} | Salary: ${role.salary} | Department Id: ${role.department_id}`);
         })
         start();
     });
@@ -101,7 +101,7 @@ function viewEmployees(){
     db.query(sql, (err, res) => {
         console.log(`Employees: `);
         res.forEach(employee => { 
-            console.log(`Id: ${employee.id} | Name: ${employee.first_name} ${employee.last_name} | Role Id: ${employee.role_id} | Manager ID: ${employee.manager_id}`);
+            console.log(`Id: ${employee.id}  | Name: ${employee.first_name} ${employee.last_name} | Role Id: ${employee.role_id} | Manager ID: ${employee.manager_id}`);
         })
         start();
     });
@@ -111,12 +111,12 @@ function viewEmployees(){
      inquirer.prompt({
          type: 'input',
          name: 'department',
-         message: "What id the name of the new Department?",
+         message: "What is the name of the new Department?",
      })
      .then((answer) => {
          const sql = "INSERT INTO department.name VALUES = ?";
          db.query(sql, answer.department, (err, res) =>{
-         console.log(`You have added this department : ${(answer.department).toUpperCase()}`);
+         console.log(`You have added this department : ${(answer.department)}`);
 
          })
          viewDepartments();
@@ -161,7 +161,7 @@ function viewEmployees(){
                 let values = [answer.title, parseInt(answer.salary), id]
                 console.log(values);
                 db.query(sql, values, (err, res, fields) => {
-                    console.log(`You have added this role: ${(values[0]).toUpperCase()}`)
+                    console.log(`You have added this role: ${(values[0]).toUpperCase()}`);
                 })
                 viewRoles();
              })
@@ -242,3 +242,61 @@ function viewEmployees(){
         })
      })
  }
+function updateRole(){
+    db.query("SELECT * FROM employee", (err, res) => {
+        if(err) throw err;
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'employeeName',
+                message: "Which employee's role is updating?",
+                choices: function(){
+                    employeeArray = [];
+                    res.forEach(res => {
+                        employeeArray.push(res.last_name);
+                    })
+                    return employeeArray;
+                }
+            }
+        ])
+        .then((answer) => {
+            console.log(answer);
+            const name = answer.employeeName;
+            db.query("SELECT * FROM employee", (err, res) => {
+                if(err) throw err;
+                inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'role',
+                        message: "What is the employee's role?",
+                        choices: function(){
+                            rolesArray = [];
+                            res.forEach(res => {
+                                rolesArray.push(res.title);
+                            })
+                            return rolesArray;
+                        }
+                    }
+                ])
+                .then((rolesAns) => {
+                    const role = rolesAns.role;
+                    console.log(rolesAns.role);
+                    db.query("SELECT * FROM role WHERE title = ?", [role], (err, res) => {
+                        if(err) throw err;
+                        let roleId = res[0].id; 
+                        
+                        console.log(roleId);
+
+                        const sql = "UPDATE employee SET role_id WHERE last_name ?";
+                        const values = [roleId, name];
+                        console.log(values);
+                        db.query(sql, values, (err, res, fields) => {
+                            console.log(`You have updated ${name}'s role to ${role}`);
+                        })
+                        viewEmployees();
+                    })
+                })
+            })
+        })
+    })
+};
