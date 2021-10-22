@@ -89,7 +89,7 @@ function viewRoles(){
     db.query(sql, (err, res) => {
         console.log(`Roles: `);
         res.forEach(role => {
-        console.log(`Id: ${role.id}  | Title: ${role.title} | Salary: ${role.salary} | Department Id: ${role.department_id}`);
+        console.log(`Id: ${role.id}  | Title: ${role.title}`);
         })
         start();
     });
@@ -101,7 +101,7 @@ function viewEmployees(){
     db.query(sql, (err, res) => {
         console.log(`Employees: `);
         res.forEach(employee => { 
-            console.log(`Id: ${employee.id}  | Name: ${employee.first_name} ${employee.last_name} | Role Id: ${employee.role_id} | Manager ID: ${employee.manager_id}`);
+            console.log(`Id: ${employee.id}  | Name: ${employee.first_name} ${employee.last_name}`);
         })
         start();
     });
@@ -153,12 +153,12 @@ function viewEmployees(){
              const department = answer.departmentName;
              db.query(`SELECT * FROM DEPARTMENT`, (err, res) => {
                 if(err) throw err;
-                let filteredDept = res.filter((res) => {
+                const filteredDept = res.filter((res) => {
                     return res.name == department;
                 })
-                let id = filteredDept[0].id;
-                let sql = "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)";
-                let values = [answer.title, parseInt(answer.salary), id]
+                const id = filteredDept[0].id;
+                const sql = "INSERT INTO role (title, department_id) VALUES (?, ?)";
+                const values = [answer.title, parseInt(answer.salary), id]
                 console.log(values);
                 db.query(sql, values, (err, res, fields) => {
                     console.log(`You have added this role: ${(values[0]).toUpperCase()}`);

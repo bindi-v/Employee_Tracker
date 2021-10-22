@@ -83,7 +83,8 @@ If you have any questions, please reach out to my Github.
  ### Walk through Video:
 
  * A walk through video:
+ Coming Soon (need to fix some bug to run application! Sorry for your inconvenience)
 
- * The URL of the GitHub repository:
+ * [The URL of the GitHub repository](https://github.com/bindi-v/Employee_Tracker)
 
 
