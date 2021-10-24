@@ -25,6 +25,7 @@ const db = mysql.createConnection(
     password: 'Jashu&Champa@2784',
 
     database: 'employees_db',
+    
     port: 3306
   },
   console.log(`Connected to the employees_db database.`)
@@ -106,14 +107,24 @@ function viewRoles(){
 };
 
 function viewEmployees(){
-    const sql = 
-    //"SELECT employee.id AS Id, employee.first_name As FirstName, employee.last_name AS LastName, role.title AS Title, role.salary AS Salary, department.name AS Department";
+    const sql = `SELECT employee.id AS Id,
+                        employee.first_name As First_Name,
+                        employee.last_name AS Last_Name, 
+                        role.title AS Title, 
+                        role.salary AS Salary, 
+                        name AS Department,
+                        CONCAT (manager.first_name, ' ', manager.last_name) AS Manager
+                FROM employee 
+                        LEFT JOIN role ON role_id = role.id 
+                        LEFT JOIN department ON department_id = Department.id  
+                        LEFT JOIN employee manager ON employee.manager_id = Manager.id`;
+
     db.query(sql, (err, res) => {
         if(err) throw err;
-        console.log(`Employees: `);
-        res.forEach(employee => { 
-       console.log(`Id: ${employee.id}  | Name: ${employee.first_name} ${employee.last_name}`);
-       })
+       // console.log(`Employees: `);
+       // res.forEach(employee => { 
+      // console.log(`Id: ${employee.id}  | Name: ${employee.first_name} ${employee.last_name}`);
+      // })
        console.table(res);
         start();
     });
@@ -130,9 +141,10 @@ function viewEmployees(){
          db.query(sql, answer.department, (err, res) =>{
             if(err) throw err;
          console.log(`You have added this department : ${(answer.department)}`);
-            console.table(res);
-         start();
+           // console.table(res);
+         
          })
+         start();
      })
  }
 
