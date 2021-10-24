@@ -181,17 +181,17 @@ function viewEmployees(){
                     return res.name == department;
                 })
                 const id = filteredDept[0].id;
-                const sql = "INSERT INTO role (title, department_id) VALUES (?, ?)";
+                const sql = "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)";
                 const values = [answer.title, parseInt(answer.salary), id]
                 console.log(values);
-                db.query(sql, values, (err, res, fields) => {
-                    console.log(`You have added this role: ${(values[0]).toUpperCase()}`);
+                db.query(sql, values, (err, res) => {
+                    console.log(`You have added this role: ${values[0].toUpperCase()}`);
                 })
                 viewRoles();
              })
          })
 
-         })
+    })
  }
 
  async function addEmployee() {
