@@ -133,18 +133,17 @@ function viewEmployees(){
  function addDepartment() {
      inquirer.prompt({
          type: 'input',
-         name: 'department',
+         name: 'addDepartment',
          message: "What is the name of the new Department?",
      })
      .then((answer) => {
-         const sql = "INSERT INTO department.name VALUES = ?";
-         db.query(sql, answer.department, (err, res) =>{
+         const sql = `INSERT INTO department (name) VALUES (?)`;
+         db.query(sql, answer.addDepartment, (err, res) =>{
             if(err) throw err;
-         console.log(`You have added this department : ${(answer.department)}`);
-           // console.table(res);
-         
+         console.log(`You have added this department : ${(answer.addDepartment)}`);
+          // console.table(res);
          })
-         start();
+         viewDepartments();
      })
  }
 
