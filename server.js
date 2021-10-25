@@ -252,10 +252,10 @@ function viewEmployees(){
                             }) 
                             let managerId = filteredManager[0].id;
                             console.log(managerAns);
-                            const sql = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?)";
+                            const sql = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
                             const values = [answer.firstName, answer.lastName, roleId, managerId];
                             console.log(values);
-                            db.query(sql, values, (err, res, fields) => {
+                            db.query(sql, values, (err, res) => {
                                 console.log(`You have added an Employee: ${values[0].toUpperCase()}`);
                             })
                             viewEmployees();
