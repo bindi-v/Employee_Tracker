@@ -314,7 +314,7 @@ function updateRole(){
                         const sql = "UPDATE employee SET role_id WHERE last_name ?";
                         const values = [roleId, name];
                         console.log(values);
-                        db.query(sql, values, (err, res, fields) => {
+                        db.query(sql, values, (err, res) => {
                             console.log(`You have updated ${name}'s role to ${role}`);
                         })
                         viewEmployees();
