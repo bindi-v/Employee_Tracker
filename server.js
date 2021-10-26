@@ -276,17 +276,17 @@ function updateRole(){
                 message: "Which employee's role is updating?",
                 choices: function(){
                     employeeArray = [];
-                    res.forEach(res => {
-                        employeeArray.push(res.last_name);
+                    res.map(({id, first_name, last_name})=> {
+                        employeeArray.push({name:`${first_name, last_name} `, value: id});
                     })
                     return employeeArray;
                 }
             }
         ])
         .then((answer) => {
-            console.log(answer);
+            console.table(answer);
             const name = answer.employeeName;
-            db.query("SELECT * FROM employee", (err, res) => {
+            db.query("SELECT * FROM role", (err, res) => {
                 if(err) throw err;
                 inquirer.prompt([
                     {
@@ -311,8 +311,8 @@ function updateRole(){
                         
                         console.log(roleId);
 
-                        const sql = "UPDATE employee SET role_id WHERE last_name ?";
-                        const values = [roleId, name];
+                        const sql = "UPDATE employee SET role_id = ? WHERE id = ?";
+                        const values = [ roleId, name ];
                         console.log(values);
                         db.query(sql, values, (err, res) => {
                             console.log(`You have updated ${name}'s role to ${role}`);
